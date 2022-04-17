@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "bigreactors",
+  "version": "${version}",
+  "name": "Extreme Reactors [Fabric]",
+  "description": "Adds large, multiblock power generation machines to Minecraft. This is a continuation of the 1.7.10 mod Big Reactors from ErogenousBeef",
+  "authors": [
+    "Forge Dev: ZeroNoRyouki",
+    "Fabric Dev: Blodhgarm"
+  ],
+  "contact": {
+    "issues": "",
+    "sources": ""
+  },
+  "license": "MIT License https://www.curseforge.com/minecraft/mc-mods/extreme-reactors",
+  "contributors": [
+    "Dragon_Seeker"
+  ],
+  "icon": "assets/bigreactors/logo.png",
+  "accessWidener" : "bigreactors.accesswidener",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "it.zerono.mods.extremereactors.ExtremeReactors"
+    ]
+  },
+  "mixins": [
+    "bigreactors.mixins.json"
+  ],
+  "depends": {
+    "owo": ">=0.3.14+1.18",
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}

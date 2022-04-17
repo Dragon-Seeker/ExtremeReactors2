@@ -20,6 +20,7 @@ package it.zerono.mods.extremereactors.api.turbine;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import io.github.fabricators_of_create.porting_lib.util.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.zerono.mods.extremereactors.Log;
 import it.zerono.mods.extremereactors.api.ExtremeReactorsAPI;
@@ -33,7 +34,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;

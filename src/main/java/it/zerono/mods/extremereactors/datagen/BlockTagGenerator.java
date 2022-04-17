@@ -34,6 +34,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class BlockTagGenerator

@@ -18,6 +18,7 @@
 
 package it.zerono.mods.extremereactors;
 
+import io.github.fabricators_of_create.porting_lib.crafting.CraftingHelper;
 import it.zerono.mods.extremereactors.api.internal.modpack.wrapper.ApiWrapper;
 import it.zerono.mods.extremereactors.config.Config;
 import it.zerono.mods.extremereactors.config.conditions.ConfigCondition;
@@ -30,6 +31,7 @@ import it.zerono.mods.extremereactors.proxy.ProxySafeReferent;
 import it.zerono.mods.zerocore.lib.init.IModInitializationHandler;
 import it.zerono.mods.zerocore.lib.network.IModMessage;
 import it.zerono.mods.zerocore.lib.network.NetworkHandler;
+import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -47,7 +49,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(value = ExtremeReactors.MOD_ID)
-public class ExtremeReactors implements IModInitializationHandler {
+public class ExtremeReactors implements ModInitializer {
 
     public static final String MOD_ID = "bigreactors";
     public static final String MOD_NAME = "Extreme Reactors 2";
@@ -64,8 +66,8 @@ public class ExtremeReactors implements IModInitializationHandler {
         return new ResourceLocation(MOD_ID, path);
     }
 
-    public ExtremeReactors() {
-
+    @Override
+    public void onInitialize() {
         s_instance = this;
         this._network = new NetworkHandler(newID("network"), "1");
 
@@ -76,8 +78,8 @@ public class ExtremeReactors implements IModInitializationHandler {
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        modBus.addListener(this::onCommonInit);
-        modBus.addListener(this::onInterModProcess);
+//        modBus.addListener(this::onCommonInit);
+//        modBus.addListener(this::onInterModProcess);
         modBus.addGenericListener(RecipeSerializer.class, this::onRegisterRecipeSerializer);
 
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
@@ -89,10 +91,10 @@ public class ExtremeReactors implements IModInitializationHandler {
      * Called on both the physical client and the physical server to perform common initialization tasks
      * @param event the event
      */
-    @Override
-    public void onCommonInit(FMLCommonSetupEvent event) {
-        this._network.registerMessage(UpdateClientsFuelRodsLayout.class, UpdateClientsFuelRodsLayout::new);
-    }
+//    @Override
+//    public void onCommonInit(FMLCommonSetupEvent event) {
+//        this._network.registerMessage(UpdateClientsFuelRodsLayout.class, UpdateClientsFuelRodsLayout::new);
+//    }
 
     /**
      * Retrieve and process inter-mods messages and process them
@@ -101,40 +103,40 @@ public class ExtremeReactors implements IModInitializationHandler {
      *
      * @param event the event
      */
-    @Override
-    public void onInterModProcess(InterModProcessEvent event) {
-
-        // API messages
-
-        // - Reactor reactants/mapping/reactions
-        imcProcessAPIMessages(event, "reactant-register");
-        imcProcessAPIMessages(event, "mapping-register");
-        imcProcessAPIMessages(event, "reaction-register");
-        imcProcessAPIMessages(event, "reaction-remove");
-        imcProcessAPIMessages(event, "mapping-remove");
-        imcProcessAPIMessages(event, "reactant-remove");
-
-        // - Reactor Moderators
-        imcProcessAPIMessages(event, "moderator-s-register");
-        imcProcessAPIMessages(event, "moderator-f-register");
-        imcProcessAPIMessages(event, "moderator-s-remove");
-        imcProcessAPIMessages(event, "moderator-f-remove");
-
-        // - Coolants / Vapors
-        imcProcessAPIMessages(event, "fluid-register");
-        imcProcessAPIMessages(event, "fluid-mapping-register");
-        imcProcessAPIMessages(event, "fluid-transition-register");
-        imcProcessAPIMessages(event, "fluid-transition-remove");
-        imcProcessAPIMessages(event, "fluid-mapping-remove");
-        imcProcessAPIMessages(event, "fluid-remove");
-
-        // - Turbine CoilMaterials
-        imcProcessAPIMessages(event, "coilmaterial-register");
-        imcProcessAPIMessages(event, "coilmaterial-remove");
-
-        // ModPack API Wrapper
-        ApiWrapper.processFile();
-    }
+//    @Override
+//    public void onInterModProcess(InterModProcessEvent event) {
+//
+//        // API messages
+//
+//        // - Reactor reactants/mapping/reactions
+//        imcProcessAPIMessages(event, "reactant-register");
+//        imcProcessAPIMessages(event, "mapping-register");
+//        imcProcessAPIMessages(event, "reaction-register");
+//        imcProcessAPIMessages(event, "reaction-remove");
+//        imcProcessAPIMessages(event, "mapping-remove");
+//        imcProcessAPIMessages(event, "reactant-remove");
+//
+//        // - Reactor Moderators
+//        imcProcessAPIMessages(event, "moderator-s-register");
+//        imcProcessAPIMessages(event, "moderator-f-register");
+//        imcProcessAPIMessages(event, "moderator-s-remove");
+//        imcProcessAPIMessages(event, "moderator-f-remove");
+//
+//        // - Coolants / Vapors
+//        imcProcessAPIMessages(event, "fluid-register");
+//        imcProcessAPIMessages(event, "fluid-mapping-register");
+//        imcProcessAPIMessages(event, "fluid-transition-register");
+//        imcProcessAPIMessages(event, "fluid-transition-remove");
+//        imcProcessAPIMessages(event, "fluid-mapping-remove");
+//        imcProcessAPIMessages(event, "fluid-remove");
+//
+//        // - Turbine CoilMaterials
+//        imcProcessAPIMessages(event, "coilmaterial-register");
+//        imcProcessAPIMessages(event, "coilmaterial-remove");
+//
+//        // ModPack API Wrapper
+//        ApiWrapper.processFile();
+//    }
 
     public void onRegisterRecipeSerializer(final RegistryEvent.Register<RecipeSerializer<?>> event) {
         CraftingHelper.register(ConfigCondition.Serializer.INSTANCE);

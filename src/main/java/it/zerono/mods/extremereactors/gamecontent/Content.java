@@ -18,6 +18,8 @@
 
 package it.zerono.mods.extremereactors.gamecontent;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyRegistrar;
+import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
 import it.zerono.mods.extremereactors.ExtremeReactors;
 import it.zerono.mods.extremereactors.gamecontent.fluid.ReactantFluid;
 import it.zerono.mods.extremereactors.gamecontent.fluid.SteamFluid;
@@ -60,6 +62,7 @@ import it.zerono.mods.zerocore.lib.item.ModItem;
 import it.zerono.mods.zerocore.lib.item.inventory.container.ModTileContainer;
 import it.zerono.mods.zerocore.lib.recipe.ModRecipe;
 import it.zerono.mods.zerocore.lib.recipe.ModRecipeType;
+import net.minecraft.core.Registry;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -82,34 +85,34 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 public final class Content {
 
     public static void initialize() {
+        Blocks.initialize();
+        Items.initialize();
+        Fluids.initialize();
+        TileEntityTypes.initialize();
+        ContainerTypes.initialize();
+        Recipes.initialize();
 
-        final IEventBus bus = Mod.EventBusSubscriber.Bus.MOD.bus().get();
+        onCommonInit();
 
-        Blocks.initialize(bus);
-        Items.initialize(bus);
-        Fluids.initialize(bus);
-        TileEntityTypes.initialize(bus);
-        ContainerTypes.initialize(bus);
-        Recipes.initialize(bus);
-
-        bus.addListener(Content::onCommonInit);
+        //bus.addListener(Content::onCommonInit);
     }
 
     public static final class Blocks {
 
-        private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExtremeReactors.MOD_ID);
+        private static final LazyRegistrar<Block> BLOCKS = LazyRegistrar.create(Registry.BLOCK, ExtremeReactors.MOD_ID);
 
-        static void initialize(final IEventBus bus) {
-            BLOCKS.register(bus);
+        static void initialize() {
+            BLOCKS.register();
         }
 
-        public static Collection<RegistryObject<Block>> getAll() {
-            return BLOCKS.getEntries();
+        public static Collection<RegistryObject<? extends Block>> getAll() {
+            return BLOCKS.getEntires();
         }
 
         //region metals
@@ -437,10 +440,10 @@ public final class Content {
     @SuppressWarnings("unused")
     public static final class Items {
 
-        private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ExtremeReactors.MOD_ID);
+        private static final LazyRegistrar<Item> ITEMS = LazyRegistrar.create(Registry.ITEM, ExtremeReactors.MOD_ID);
 
-        static void initialize(final IEventBus bus) {
-            ITEMS.register(bus);
+        static void initialize() {
+            ITEMS.register();
         }
 
         //region metals
@@ -627,10 +630,10 @@ public final class Content {
 
     public static final class Fluids {
 
-        private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, ExtremeReactors.MOD_ID);
+        private static final LazyRegistrar<Fluid> FLUIDS = LazyRegistrar.create(Registry.FLUID, ExtremeReactors.MOD_ID);
 
-        static void initialize(final IEventBus bus) {
-            FLUIDS.register(bus);
+        static void initialize() {
+            FLUIDS.register();
         }
 
         public static final RegistryObject<ForgeFlowingFluid> STEAM_SOURCE = FLUIDS.register("steam", SteamFluid.Source::new);
@@ -687,11 +690,11 @@ public final class Content {
 
     public static final class TileEntityTypes {
 
-        private static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES =
-                DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ExtremeReactors.MOD_ID);
+        private static final LazyRegistrar<BlockEntityType<?>> BLOCK_ENTITIES =
+                LazyRegistrar.create(Registry.BLOCK_ENTITY_TYPE, ExtremeReactors.MOD_ID);
 
-        static void initialize(final IEventBus bus) {
-            TILE_ENTITIES.register(bus);
+        static void initialize() {
+            BLOCK_ENTITIES.register();
         }
 
         //region Reactor
@@ -917,7 +920,7 @@ public final class Content {
         private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> registerBlockEntity(final String name,
                                                                                                     final BlockEntityType.BlockEntitySupplier<T> factory,
                                                                                                     final Supplier<Supplier<Block>>... validBlockSuppliers) {
-            return TILE_ENTITIES.register(name, () -> {
+            return BLOCK_ENTITIES.register(name, () -> {
 
                 final Block[] validBlocks = new Block[validBlockSuppliers.length];
 
@@ -936,11 +939,11 @@ public final class Content {
 
     public static final class ContainerTypes {
 
-        private static final DeferredRegister<MenuType<?>> CONTAINERS =
-                DeferredRegister.create(ForgeRegistries.CONTAINERS, ExtremeReactors.MOD_ID);
+        private static final LazyRegistrar<MenuType<?>> CONTAINERS =
+                LazyRegistrar.create(Registry.MENU, ExtremeReactors.MOD_ID);
 
-        static void initialize(final IEventBus bus) {
-            CONTAINERS.register(bus);
+        static void initialize() {
+            CONTAINERS.register();
         }
 
         //region Reactor
@@ -1023,11 +1026,11 @@ public final class Content {
 
     public static final class Recipes {
 
-        private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
-                DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ExtremeReactors.MOD_ID);
+        private static final LazyRegistrar<RecipeSerializer<?>> SERIALIZERS =
+                LazyRegistrar.create(Registry.RECIPE_SERIALIZER, ExtremeReactors.MOD_ID);
 
-        static void initialize(final IEventBus bus) {
-            SERIALIZERS.register(bus);
+        static void initialize() {
+            SERIALIZERS.register();
         }
 
         //region Reprocessor
@@ -1055,7 +1058,7 @@ public final class Content {
 
     //region internals
 
-    private static void onCommonInit(final FMLCommonSetupEvent event) {
+    private static void onCommonInit() {
 
         ReactorGameData.register();
         TurbineGameData.register();
